@@ -9,14 +9,20 @@ class Test01Android:
         log.info("test_01")
         assert True
 
+    def setup_method(self, method):
+        log.info("setup_method")
+        pass
+
     @classmethod
     def setup_class(cls):
-        # set up some state
         log.info("setup_class")
         pass
 
     @classmethod
     def teardown_class(cls):
-        # teardown state
         log.info("teardown_class")
+        pass
+
+    def teardown_method(self, method):
+        log.info("teardown_method")
         pass

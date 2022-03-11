@@ -1,12 +1,16 @@
 import logging
 
+import pytest
+
 log = logging.getLogger('simple_example')
 log.setLevel(logging.DEBUG)
 
 
 class Test01Android:
-    def test_01(self):
+    @pytest.mark.parametrize("os", ["Android"])
+    def test_01(self, os):
         log.info("test_01")
+        log.info("Android")
         assert True
 
     def setup_method(self, method):

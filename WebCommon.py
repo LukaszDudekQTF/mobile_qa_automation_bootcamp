@@ -2,7 +2,7 @@ from appium import webdriver
 
 echo_box_button_accessibility_id = "Login Screen"
 echo_box_screen_field_accessibility_id = "messageInput"
-app_path = "/Users/lukas/Desktop/boot-camp/theapp.apk"
+the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
 
 
 class WebCommon:
@@ -31,8 +31,10 @@ class WebCommon:
         self.driver = self.get_driver().quit()
 
 
-tescior01 = WebCommon(app_path).get_driver()
-tescior01.find_element_by_accessibility_id(echo_box_button_accessibility_id).click()
-tescior01.find_element_by_accessibility_id(echo_box_screen_field_accessibility_id).send_keys("Elo Andrei :)")
-tescior01.implicitly_wait(2)
-WebCommon(app_path).close_driver()
+driver = WebCommon(the_app).get_driver()
+
+# tescior01 = WebCommon(the_app).get_driver()
+# tescior01.find_element_by_accessibility_id(echo_box_button_accessibility_id).click()
+# tescior01.find_element_by_accessibility_id(echo_box_screen_field_accessibility_id).send_keys("Elo Andrei :)")
+# tescior01.implicitly_wait(2)
+# WebCommon(the_app).close_driver()

@@ -1,5 +1,4 @@
 import logging
-
 import pytest
 
 log = logging.getLogger('simple_example')

@@ -15,4 +15,4 @@ def test_05_text():
     list_demo_screen_header = get_element_by_text(list_demo_header).text
     logger_config.log.info(f" 'List Demo' screen's header \"{list_demo_screen_header}\", \
     expected: \"{list_demo_header}\"")
-    assert list_demo_screen_header == "Check out these clouds"
+    assert list_demo_screen_header == list_demo_header

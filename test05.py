@@ -1,11 +1,12 @@
-import WebCommon
+from WebCommon import WebCommon, the_app
 import logger_config
 
 list_demo_header = "Check out these clouds"
+driver = WebCommon(the_app).get_driver()
 
 
 def get_element_by_text(text):
-    find_text = WebCommon.driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
+    find_text = driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
     return find_text
 
 

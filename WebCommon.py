@@ -19,7 +19,7 @@ class WebCommon:
             # "autoGrantPermissions": True
             "noReset": True
         }
-        self.driver = webdriver.Remote("http://0.0.0.0:4723/wd/hub", desired_caps)
+        self.driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
 
     def get_driver(self):
         return self.driver

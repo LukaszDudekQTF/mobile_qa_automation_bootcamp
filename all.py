@@ -1,4 +1,5 @@
 from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
 import logging
 import pytest
 
@@ -7,6 +8,10 @@ log.setLevel(logging.DEBUG)
 
 the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
 list_demo_header = "Check out these clouds"
+message = "Hello World"
+echo_box_button_accessibility_id = "Login Screen"
+echo_box_screen_field_accessibility_id = "messageInput"
+echo_box_save_button_accessibility_id = "messageSaveBtn"
 
 
 class WebCommon:
@@ -34,7 +39,7 @@ class WebCommon:
         self.driver.quit()
 
 
-driver = WebCommon(the_app).get_driver()
+# driver = WebCommon(the_app).get_driver()
 
 
 class Test01Android:
@@ -44,6 +49,7 @@ class Test01Android:
 
     def setup_method(self, method):
         log.info("setup_method")
+        self.driver = WebCommon(the_app).get_driver()
 
     @pytest.mark.parametrize("os", ["Android"])
     def test_01(self, os):
@@ -51,6 +57,7 @@ class Test01Android:
 
     def teardown_method(self, method):
         log.info("teardown_method")
+        WebCommon(the_app).close_driver()
 
     @classmethod
     def teardown_class(cls):
@@ -65,13 +72,13 @@ class Test01Android:
         assert True
 
     def test_04_list_size(self):
-        list_of_elements = driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
-        driver.implicitly_wait(1)
+        list_of_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
+        self.driver.implicitly_wait(1)
         log.info(f" List size: {len(list_of_elements)}, Expected: 7")
         assert len(list_of_elements) == 7
 
     def get_element_by_text(self, text):
-        find_text = driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
+        find_text = self.driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
         return find_text
 
     def test_05_text(self):
@@ -81,3 +88,13 @@ class Test01Android:
         log.info(f" 'List Demo' screen's header \"{list_demo_screen_header}\", \
         expected: \"{list_demo_header}\"")
         assert list_demo_screen_header == list_demo_header
+
+    def test_06_send_keys(self):
+        self.driver.find_element_by_accessibility_id(echo_box_button_accessibility_id).click()
+        self.driver.implicitly_wait(5)
+        self.driver.find_element_by_accessibility_id(echo_box_screen_field_accessibility_id).send_keys(message)
+        # driver.find_element_by_accessibility_id(echo_box_save_button_accessibility_id).click()
+        TouchAction(self.driver).tap(x=543, y=1414).perform()
+        text_sent = self.driver.find_element_by_xpath('//android.widget.TextView[@index="1"]').text
+        log.info(f"Text sent: \"{text_sent}\", Expected: \"{message}\"")
+        assert text_sent == message

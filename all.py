@@ -51,3 +51,9 @@ class Test01Android:
     @classmethod
     def teardown_class(cls):
         log.info("teardown_class")
+
+    @pytest.mark.xfail(reason="Unable to execute test")
+    def test_02_xfail(self):
+        assert False
+
+

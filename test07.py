@@ -2,7 +2,6 @@ import logger_config
 from WebCommon import WebCommon, the_app
 import time
 
-loading_hash = "#"
 driver = WebCommon(the_app).get_driver()
 
 

@@ -44,6 +44,13 @@ class WebCommon:
 # driver = WebCommon(the_app).get_driver()
 
 
+def wait(start_time=1, timeout=10):
+    log.info(f"Screen content loading: wait {timeout} seconds")
+    while start_time <= timeout:
+        time.sleep(1)
+        start_time += 1
+
+
 class Test01Android:
     @classmethod
     def setup_class(cls):
@@ -53,10 +60,6 @@ class Test01Android:
         log.info("setup_method")
         self.driver = WebCommon(the_app).get_driver()
 
-    @pytest.mark.parametrize("os", ["Android"])
-    def test_01(self, os):
-        log.info(f"test_01 on {os}")
-
     def teardown_method(self, method):
         log.info("teardown_method")
         WebCommon(the_app).close_driver()
@@ -64,6 +67,17 @@ class Test01Android:
     @classmethod
     def teardown_class(cls):
         log.info("teardown_class")
+
+    def get_element_by_text(self, text):
+        find_text = self.driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
+        return find_text
+
+    def screen_scroll(self):
+        return self.driver.swipe(500, 2100, 500, 1100, 1000)
+
+    @pytest.mark.parametrize("os", ["Android"])
+    def test_01(self, os):
+        log.info(f"test_01 on {os}")
 
     @pytest.mark.xfail(reason="Unable to execute test")
     def test_02_xfail(self):
@@ -78,10 +92,6 @@ class Test01Android:
         self.driver.implicitly_wait(1)
         log.info(f" List size: {len(list_of_elements)}, Expected: 7")
         assert len(list_of_elements) == 7
-
-    def get_element_by_text(self, text):
-        find_text = self.driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
-        return find_text
 
     def test_05_text(self):
         # to open LIST DEMO I needed to look for "Photo Demo" string because this value matches "List Demo" button in app
@@ -101,23 +111,14 @@ class Test01Android:
         log.info(f"Text sent: \"{text_sent}\", Expected: \"{message}\"")
         assert text_sent == message
 
-    def wait(self, start_time=1, timeout=10):
-        log.info(f"Screen content loading: wait {timeout} seconds")
-        while start_time <= timeout:
-            time.sleep(1)
-            start_time += 1
-
     def test_07_wait(self):
         self.driver.find_element_by_accessibility_id("Photo Demo").click()
-        self.wait()
+        wait()
         screen_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
         log.info(f"{len(screen_elements)} elements found!")
         self.driver.implicitly_wait(10)
         log.info(f"Check if button 'FOG' is present on the screen")
         assert self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')
-
-    def screen_scroll(self):
-        return self.driver.swipe(500, 2100, 500, 1100, 1000)
 
     def test_08_scroll(self):
         self.driver.implicitly_wait(5)

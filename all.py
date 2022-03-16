@@ -56,4 +56,8 @@ class Test01Android:
     def test_02_xfail(self):
         assert False
 
+    @pytest.mark.skip(reason="Unable to execute test")
+    def test_03_skip(self):
+        assert True
+
 

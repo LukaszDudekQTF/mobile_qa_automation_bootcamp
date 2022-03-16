@@ -13,6 +13,7 @@ message = "Hello World"
 echo_box_button_accessibility_id = "Login Screen"
 echo_box_screen_field_accessibility_id = "messageInput"
 echo_box_save_button_accessibility_id = "messageSaveBtn"
+element = "Stratus"
 
 
 class WebCommon:
@@ -114,3 +115,14 @@ class Test01Android:
         self.driver.implicitly_wait(10)
         log.info(f"Check if button 'FOG' is present on the screen")
         assert self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')
+
+    def screen_scroll(self):
+        return self.driver.swipe(500, 2100, 500, 1100, 1000)
+
+    def test_08_scroll(self):
+        self.driver.implicitly_wait(5)
+        self.driver.find_element_by_accessibility_id("Photo Demo").click()
+        self.driver.find_element_by_accessibility_id("Altocumulus")
+        self.screen_scroll()
+        log.info(f"Check if {element} is visible on the screen")
+        assert self.driver.find_element_by_accessibility_id(element).is_enabled()

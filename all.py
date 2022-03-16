@@ -2,6 +2,7 @@ from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 import logging
 import pytest
+import time
 
 log = logging.getLogger('simple_example')
 log.setLevel(logging.DEBUG)
@@ -98,3 +99,18 @@ class Test01Android:
         text_sent = self.driver.find_element_by_xpath('//android.widget.TextView[@index="1"]').text
         log.info(f"Text sent: \"{text_sent}\", Expected: \"{message}\"")
         assert text_sent == message
+
+    def wait(self, start_time=1, timeout=10):
+        log.info(f"Screen content loading: wait {timeout} seconds")
+        while start_time <= timeout:
+            time.sleep(1)
+            start_time += 1
+
+    def test_07_wait(self):
+        self.driver.find_element_by_accessibility_id("Photo Demo").click()
+        self.wait()
+        screen_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
+        log.info(f"{len(screen_elements)} elements found!")
+        self.driver.implicitly_wait(10)
+        log.info(f"Check if button 'FOG' is present on the screen")
+        assert self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')

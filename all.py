@@ -6,6 +6,7 @@ log = logging.getLogger('simple_example')
 log.setLevel(logging.DEBUG)
 
 the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
+list_demo_header = "Check out these clouds"
 
 
 class WebCommon:
@@ -68,3 +69,15 @@ class Test01Android:
         driver.implicitly_wait(1)
         log.info(f" List size: {len(list_of_elements)}, Expected: 7")
         assert len(list_of_elements) == 7
+
+    def get_element_by_text(self, text):
+        find_text = driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
+        return find_text
+
+    def test_05_text(self):
+        # to open LIST DEMO I needed to look for "Photo Demo" string because this value matches "List Demo" button in app
+        self.get_element_by_text("Photo Demo").click()
+        list_demo_screen_header = self.get_element_by_text(list_demo_header).text
+        log.info(f" 'List Demo' screen's header \"{list_demo_screen_header}\", \
+        expected: \"{list_demo_header}\"")
+        assert list_demo_screen_header == list_demo_header

@@ -33,6 +33,9 @@ class WebCommon:
         self.driver.quit()
 
 
+driver = WebCommon(the_app).get_driver()
+
+
 class Test01Android:
     @classmethod
     def setup_class(cls):
@@ -60,4 +63,8 @@ class Test01Android:
     def test_03_skip(self):
         assert True
 
-
+    def test_04_list_size(self):
+        list_of_elements = driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
+        driver.implicitly_wait(1)
+        log.info(f" List size: {len(list_of_elements)}, Expected: 7")
+        assert len(list_of_elements) == 7

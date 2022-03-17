@@ -1,4 +1,4 @@
-from appium.webdriver.common.touch_action import TouchAction
+from appium.webdriver.common.appiumby import AppiumBy
 import logging
 import pytest
 import time
@@ -7,19 +7,21 @@ from WebCommon import WebCommon
 log = logging.getLogger('simple_example')
 log.setLevel(logging.DEBUG)
 
-the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
-filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
+
 list_demo_header = "Check out these clouds"
 message = "Hello World"
-echo_box_button_accessibility_id = "Login Screen"
-echo_box_screen_field_accessibility_id = "messageInput"
-echo_box_save_button_accessibility_id = "messageSaveBtn"
+echo_box_button_access_id = "Echo Box"
+list_demo_button_access_id = "List Demo"
+altocumulus_access_id = "Altocumulus"
+filemanager_more_options_access_id = "More options"
+echo_box_screen_field_access_id = "messageInput"
+echo_box_save_button_access_id = "messageSaveBtn"
 element_01 = "Stratus"
 element_02 = "Fog"
 test_folder = "NewTestFolder"
 
 
-def wait(start_time=1, timeout=10):
+def custom_wait_function(start_time=1, timeout=10):
     log.info(f"Screen content loading: wait {timeout} seconds")
     while start_time <= timeout:
         time.sleep(1)
@@ -53,14 +55,26 @@ class Test01Android:
         log.info("teardown_class")
 
     def get_element_by_text(self, text):
-        find_text = self.driver.find_element_by_android_uiautomator('new UiSelector().text("' + text + '")')
+        find_text = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR,
+                                             'new UiSelector().text("' + text + '")')
         return find_text
 
     def screen_scroll(self):
-        return self.driver.swipe(500, 2100, 500, 1100, 1000)
+        return self.driver.swipe(10, 1300, 10, 500)
 
-    # def create_folder(self):
-
+    def create_new_folder_function(self):
+        self.driver.implicitly_wait(5)
+        log.info(f"Creating new folder: '{test_folder}'")
+        self.get_element_by_text("Main storage").click()
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, filemanager_more_options_access_id).click()
+        self.get_element_by_text("New").click()
+        self.get_element_by_text("Folder").click()
+        self.driver.find_element_by_xpath("//android.widget.LinearLayout/"
+                                          "android.widget.FrameLayout/"
+                                          "android.widget.EditText").send_keys(test_folder)
+        self.get_element_by_text(test_folder)
+        self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
+        log.info(f"'{test_folder}' created!")
 
     @pytest.mark.parametrize("os", ["Android"])
     def test_01(self, os):
@@ -75,57 +89,46 @@ class Test01Android:
         assert True
 
     def test_04_list_size(self):
-        list_of_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
-        self.driver.implicitly_wait(1)
+        self.driver.implicitly_wait(5)
+        list_of_elements = self.driver.find_elements(AppiumBy.XPATH, '//android.view.ViewGroup[@content-desc]')
         log.info(f" List size: {len(list_of_elements)}, Expected: 7")
         assert len(list_of_elements) == 7
 
     def test_05_text(self):
-        # to open LIST DEMO I needed to look for "Photo Demo" string because this value matches "List Demo" button in app
-        self.get_element_by_text("Photo Demo").click()
+        self.driver.implicitly_wait(5)
+        self.get_element_by_text("List Demo").click()
         list_demo_screen_header = self.get_element_by_text(list_demo_header).text
-        log.info(f" 'List Demo' screen's header \"{list_demo_screen_header}\", \
-        expected: \"{list_demo_header}\"")
+        log.info(f" 'List Demo' screen's header \"{list_demo_screen_header}\""
+                 f", expected: \"{list_demo_header}\"")
         assert list_demo_screen_header == list_demo_header
 
     def test_06_send_keys(self):
-        self.driver.find_element_by_accessibility_id(echo_box_button_accessibility_id).click()
         self.driver.implicitly_wait(5)
-        self.driver.find_element_by_accessibility_id(echo_box_screen_field_accessibility_id).send_keys(message)
-        # driver.find_element_by_accessibility_id(echo_box_save_button_accessibility_id).click()
-        TouchAction(self.driver).tap(x=543, y=1414).perform()
-        text_sent = self.driver.find_element_by_xpath('//android.widget.TextView[@index="1"]').text
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, echo_box_button_access_id).click()
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, echo_box_screen_field_access_id).send_keys(message)
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, echo_box_save_button_access_id).click()
+        text_sent = self.driver.find_element(AppiumBy.XPATH, '//android.widget.TextView[@index="1"]').text
         log.info(f"Text sent: \"{text_sent}\", Expected: \"{message}\"")
         assert text_sent == message
 
     def test_07_wait(self):
-        self.driver.find_element_by_accessibility_id("Photo Demo").click()
-        wait()
-        screen_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
+        self.driver.implicitly_wait(5)
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, list_demo_button_access_id).click()
+        custom_wait_function()
+        screen_elements = self.driver.find_elements(AppiumBy.XPATH, '//android.view.ViewGroup[@content-desc]')
         log.info(f"{len(screen_elements)} elements found!")
-        self.driver.implicitly_wait(10)
         log.info(f"Check if button '{element_02}' is present on the screen")
-        assert self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')
+        assert self.driver.find_element(AppiumBy.XPATH, '//android.view.ViewGroup[@content-desc="Fog"]')
 
     def test_08_scroll(self):
         self.driver.implicitly_wait(5)
-        self.driver.find_element_by_accessibility_id("Photo Demo").click()
-        self.driver.find_element_by_accessibility_id("Altocumulus")
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, list_demo_button_access_id).click()
+        self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, altocumulus_access_id)
         self.screen_scroll()
         log.info(f"Check if last element '{element_01}' is visible on the screen")
-        assert self.driver.find_element_by_accessibility_id(element_01).is_enabled()
+        assert self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, element_01).is_enabled()
 
     def test_09_create_folder(self):
-        self.driver.implicitly_wait(5)
-        log.info(f"Creating new folder: '{test_folder}'")
-        self.get_element_by_text("Main storage").click()
-        self.driver.find_element_by_accessibility_id("More options").click()
-        self.get_element_by_text("New").click()
-        self.get_element_by_text("Folder").click()
-        self.driver.find_element_by_xpath("//android.widget.LinearLayout/android.widget.FrameLayout/android.widget.EditText").send_keys(test_folder)
-        time.sleep(2)
-        self.get_element_by_text(test_folder)
-        self.driver.find_element_by_id("android:id/button1").click()
-        log.info(f"'{test_folder}' created!")
+        self.create_new_folder_function()
         log.info(f"Check if newly created directory '{test_folder}' is available")
         assert self.get_element_by_text(test_folder)

@@ -1,7 +1,9 @@
 from appium import webdriver
 
-the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
-filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
+# the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
+the_app = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\theapp.apk"
+# filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
+filemanager = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\filemanager.apk"
 
 
 class WebCommon:
@@ -12,11 +14,11 @@ class WebCommon:
     def init_driver(self, apk_name):
         desired_caps = {
             "platformName": "Android",
-            "platformVersion": "12",
-            "deviceName": "R5CN81ML3VE",
-            "automationName": "UiAutomator2",
-            # "autoGrantPermissions": True
-            "noReset": True
+            "platformVersion": "9",
+            "deviceName": "emulator-5554",
+            # "automationName": "UiAutomator2",
+            "autoGrantPermissions": True
+            # "noReset": True
         }
 
         if apk_name == "the_app":

@@ -14,31 +14,9 @@ message = "Hello World"
 echo_box_button_accessibility_id = "Login Screen"
 echo_box_screen_field_accessibility_id = "messageInput"
 echo_box_save_button_accessibility_id = "messageSaveBtn"
-element = "Stratus"
-
-
-'''class WebCommon:
-    def __init__(self, apk_name):
-        self.driver = None
-        self.init_driver(apk_name)
-
-    def init_driver(self, apk_name):
-        desired_caps = {
-            "platformName": "Android",
-            "platformVersion": "12",
-            "deviceName": "R5CN81ML3VE",
-            "automationName": "UiAutomator2",
-            "app": apk_name,
-            # "autoGrantPermissions": True
-            "noReset": True
-        }
-        self.driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
-
-    def get_driver(self):
-        return self.driver
-
-    def close_driver(self):
-        self.driver.quit()'''
+element_01 = "Stratus"
+element_02 = "Fog"
+test_folder = "NewTestFolder"
 
 
 def wait(start_time=1, timeout=10):
@@ -80,6 +58,9 @@ class Test01Android:
 
     def screen_scroll(self):
         return self.driver.swipe(500, 2100, 500, 1100, 1000)
+
+    # def create_folder(self):
+
 
     @pytest.mark.parametrize("os", ["Android"])
     def test_01(self, os):
@@ -123,7 +104,7 @@ class Test01Android:
         screen_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
         log.info(f"{len(screen_elements)} elements found!")
         self.driver.implicitly_wait(10)
-        log.info("Check if button 'FOG' is present on the screen")
+        log.info(f"Check if button '{element_02}' is present on the screen")
         assert self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')
 
     def test_08_scroll(self):
@@ -131,5 +112,20 @@ class Test01Android:
         self.driver.find_element_by_accessibility_id("Photo Demo").click()
         self.driver.find_element_by_accessibility_id("Altocumulus")
         self.screen_scroll()
-        log.info(f"Check if last element '{element}' is visible on the screen")
-        assert self.driver.find_element_by_accessibility_id(element).is_enabled()
+        log.info(f"Check if last element '{element_01}' is visible on the screen")
+        assert self.driver.find_element_by_accessibility_id(element_01).is_enabled()
+
+    def test_09_create_folder(self):
+        self.driver.implicitly_wait(5)
+        log.info(f"Creating new folder: '{test_folder}'")
+        self.get_element_by_text("Main storage").click()
+        self.driver.find_element_by_accessibility_id("More options").click()
+        self.get_element_by_text("New").click()
+        self.get_element_by_text("Folder").click()
+        self.driver.find_element_by_xpath("//android.widget.LinearLayout/android.widget.FrameLayout/android.widget.EditText").send_keys(test_folder)
+        time.sleep(2)
+        self.get_element_by_text(test_folder)
+        self.driver.find_element_by_id("android:id/button1").click()
+        log.info(f"'{test_folder}' created!")
+        log.info(f"Check if newly created directory '{test_folder}' is available")
+        assert self.get_element_by_text(test_folder)

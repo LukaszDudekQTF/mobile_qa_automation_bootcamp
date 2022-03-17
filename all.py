@@ -1,13 +1,14 @@
-from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 import logging
 import pytest
 import time
+from WebCommon import WebCommon
 
 log = logging.getLogger('simple_example')
 log.setLevel(logging.DEBUG)
 
 the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
+filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
 list_demo_header = "Check out these clouds"
 message = "Hello World"
 echo_box_button_accessibility_id = "Login Screen"
@@ -16,11 +17,10 @@ echo_box_save_button_accessibility_id = "messageSaveBtn"
 element = "Stratus"
 
 
-class WebCommon:
+'''class WebCommon:
     def __init__(self, apk_name):
         self.driver = None
         self.init_driver(apk_name)
-        # self.get_driver()
 
     def init_driver(self, apk_name):
         desired_caps = {
@@ -38,10 +38,7 @@ class WebCommon:
         return self.driver
 
     def close_driver(self):
-        self.driver.quit()
-
-
-# driver = WebCommon(the_app).get_driver()
+        self.driver.quit()'''
 
 
 def wait(start_time=1, timeout=10):
@@ -56,13 +53,22 @@ class Test01Android:
     def setup_class(cls):
         log.info("setup_class")
 
-    def setup_method(self, method):
+    def setup_method(self, method_name):
         log.info("setup_method")
-        self.driver = WebCommon(the_app).get_driver()
+        test_method_number = int(method_name.__name__[6])
+        the_app_test_pack = [1, 2, 3, 4, 5, 6, 7, 8]
+        if test_method_number in the_app_test_pack:
+            apk_name = "the_app"
+        else:
+            apk_name = "filemanager"
 
-    def teardown_method(self, method):
+        log.info(f"Method '{method_name.__name__}' in progress ...")
+        self.webcommon_app = WebCommon(apk_name)
+        self.driver = self.webcommon_app.get_driver()
+
+    def teardown_method(self):
         log.info("teardown_method")
-        WebCommon(the_app).close_driver()
+        self.webcommon_app.close_driver()
 
     @classmethod
     def teardown_class(cls):
@@ -117,7 +123,7 @@ class Test01Android:
         screen_elements = self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
         log.info(f"{len(screen_elements)} elements found!")
         self.driver.implicitly_wait(10)
-        log.info(f"Check if button 'FOG' is present on the screen")
+        log.info("Check if button 'FOG' is present on the screen")
         assert self.driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')
 
     def test_08_scroll(self):
@@ -125,5 +131,5 @@ class Test01Android:
         self.driver.find_element_by_accessibility_id("Photo Demo").click()
         self.driver.find_element_by_accessibility_id("Altocumulus")
         self.screen_scroll()
-        log.info(f"Check if {element} is visible on the screen")
+        log.info(f"Check if last element '{element}' is visible on the screen")
         assert self.driver.find_element_by_accessibility_id(element).is_enabled()

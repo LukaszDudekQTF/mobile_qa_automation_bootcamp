@@ -18,5 +18,5 @@ def test_07_wait():
     screen_elements = driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc]')
     logger_config.log.info(f"{len(screen_elements)} elements found!")
     driver.implicitly_wait(12)
-    logger_config.log.info(f"Check if button 'FOG' is present on the screen")
+    logger_config.log.info("Check if button 'FOG' is present on the screen")
     assert driver.find_elements_by_xpath('//android.view.ViewGroup[@content-desc="Fog"]')

@@ -1,8 +1,12 @@
 from appium import webdriver
 
+
+# MAC localizations
 # the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
-the_app = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\theapp.apk"
 # filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
+
+# Windows localizations
+the_app = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\theapp.apk"
 filemanager = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\filemanager.apk"
 
 

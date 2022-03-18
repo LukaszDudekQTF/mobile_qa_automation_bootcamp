@@ -1,4 +1,5 @@
 from appium.webdriver.common.appiumby import AppiumBy
+from appium.webdriver.common.touch_action import TouchAction
 import logging
 import pytest
 import time
@@ -76,6 +77,14 @@ class Test01Android:
         self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
         log.info(f"'{test_folder}' created!")
 
+    def remove_folder_function(self):
+        log.info(f"Deleting {test_folder}...")
+        self.driver.implicitly_wait(5)
+        self.folder_name = self.get_element_by_text(test_folder)
+        self.actions = TouchAction(self.driver).long_press(self.folder_name).perform()
+        self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/bottom_menu_delete").click()
+        self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
+
     @pytest.mark.parametrize("os", ["Android"])
     def test_01(self, os):
         log.info(f"test_01 on {os}")
@@ -132,3 +141,4 @@ class Test01Android:
         self.create_new_folder_function()
         log.info(f"Check if newly created directory '{test_folder}' is available")
         assert self.get_element_by_text(test_folder)
+        self.remove_folder_function()

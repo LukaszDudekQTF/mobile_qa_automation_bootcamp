@@ -5,6 +5,7 @@ import pytest
 import time
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
 
 from WebCommon import WebCommon
 
@@ -21,7 +22,8 @@ echo_box_screen_field_access_id = "messageInput"
 echo_box_save_button_access_id = "messageSaveBtn"
 element_01 = "Stratus"
 element_02 = "Fog"
-new_test_folder = "test_folder"
+test_new_folder = "test_folder"
+test_rename_folder = "secure_folder"
 count_of_theapp_tests = 8
 folder_exists_message = "File or folder already exists"
 folder_created_message = "Folder created successfully"
@@ -41,8 +43,8 @@ class Test01Android:
 
     def setup_method(self, method_name):
         log.info("setup_method")
-        test_method_number = int(method_name.__name__[6])
-        the_app_test_pack = [x + 1 for x in range(count_of_theapp_tests)]
+        test_method_number = method_name.__name__[5:7]
+        the_app_test_pack = str([x + 1 for x in range(count_of_theapp_tests)])
         if test_method_number in the_app_test_pack:
             apk_name = "the_app"
         else:
@@ -68,37 +70,36 @@ class Test01Android:
     def screen_scroll(self):
         return self.driver.swipe(10, 1300, 10, 500)
 
-    def create_new_folder_function(self):
+    def create_new_folder_function(self, new_folder):
         self.driver.implicitly_wait(2)
-        log.info(f"Creating new folder: '{new_test_folder}'")
+        log.info(f"Creating new folder: '{new_folder}'")
         self.get_element_by_text("Main storage").click()
         self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, filemanager_more_options_access_id).click()
         self.get_element_by_text("New").click()
         self.get_element_by_text("Folder").click()
         self.driver.find_element(AppiumBy.XPATH, "//android.widget.LinearLayout/"
                                                  "android.widget.FrameLayout/"
-                                                 "android.widget.EditText").send_keys(new_test_folder)
-        self.get_element_by_text(new_test_folder)
+                                                 "android.widget.EditText").send_keys(new_folder)
+        self.get_element_by_text(new_folder)
         self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
 
         try:
-            self.get_element_by_text(folder_created_message)
-            log.info(f"'{new_test_folder}' created!")
+            self.get_element_by_text("Main storage")
+            log.info(f"'{new_folder}' created!")
             self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/home").click()
-
         except NoSuchElementException:
-            log.info(f"Folder of file with '{new_test_folder}' name already exists!")
+            log.info(f"Folder of file with '{new_folder}' name already exists!")
             self.driver.find_element(AppiumBy.ID, "android:id/button2").click()
             self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/home").click()
 
-    def remove_folder_function(self):
-        log.info(f"Deleting {new_test_folder}...")
+    def remove_folder_function(self, remove_folder):
+        log.info(f"Deleting {remove_folder}...")
         self.driver.implicitly_wait(2)
         self.get_element_by_text("Main storage").click()
         while True:
             try:
-                self.folder_name = self.get_element_by_text(new_test_folder)
-                self.actions = TouchAction(self.driver).long_press(self.folder_name).perform()
+                self.folder_name = self.get_element_by_text(remove_folder)
+                self.actions = ActionChains(self.driver).click_and_hold(self.folder_name).perform()
                 self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/bottom_menu_delete").click()
                 self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
                 self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/home").click()
@@ -160,27 +161,56 @@ class Test01Android:
         assert self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, element_01).is_enabled()
 
     def test_09_create_folder(self):
-        self.create_new_folder_function()
-        log.info(f"Check if newly created directory '{new_test_folder}' is available")
+        self.create_new_folder_function(test_new_folder)
+        log.info(f"Check if newly created directory '{test_new_folder}' is available")
         self.get_element_by_text("Main storage").click()
         try:
-            assert self.get_element_by_text(new_test_folder)
+            assert self.get_element_by_text(test_new_folder)
         except NoSuchElementException:
             self.screen_scroll()
-            assert self.get_element_by_text(new_test_folder)
+            assert self.get_element_by_text(test_new_folder)
         self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/home").click()
-        self.remove_folder_function()
+        self.remove_folder_function(test_new_folder)
 
     def test_10_delete_folder(self):
-        self.create_new_folder_function()
-        self.remove_folder_function()
-        log.info(f"Check if newly created folder '{new_test_folder}' was successfully removed")
+        self.create_new_folder_function(test_new_folder)
+        self.remove_folder_function(test_new_folder)
+        log.info(f"Check if newly created folder '{test_new_folder}' was successfully removed")
         self.get_element_by_text("Main storage").click()
         try:
-            assert self.get_element_by_text(new_test_folder).is_enabled()
+            assert self.get_element_by_text(test_new_folder).is_enabled()
         except NoSuchElementException:
             try:
                 self.screen_scroll()
-                assert self.get_element_by_text(new_test_folder).is_enabled()
+                assert self.get_element_by_text(test_new_folder).is_enabled()
             except NoSuchElementException:
-                log.info(f"'{new_test_folder}' is no longer available")
+                log.info(f"'{test_new_folder}' is no longer available")
+
+    def test_11_rename(self):
+        self.driver.implicitly_wait(2)
+        self.create_new_folder_function(test_new_folder)
+        self.get_element_by_text("Main storage").click()
+        try:
+            self.folder_name = self.get_element_by_text(test_new_folder)
+            self.actions = ActionChains(self.driver).click_and_hold(self.folder_name).perform()
+        except NoSuchElementException:
+            self.screen_scroll()
+            self.folder_name = self.get_element_by_text(test_new_folder)
+            self.actions = ActionChains(self.driver).click_and_hold(self.folder_name).perform()
+
+        self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/bottom_menu_rename").click()
+        self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/file_name").send_keys\
+            (test_rename_folder)
+        self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
+        log.info(f"Checking if '{test_rename_folder}' was created successfully")
+        try:
+            assert self.get_element_by_text(test_rename_folder).is_enabled()
+        except NoSuchElementException:
+            try:
+                self.screen_scroll()
+                assert self.get_element_by_text(test_new_folder).is_enabled()
+            except NoSuchElementException:
+                log.info(f"'{test_rename_folder}' is not available")
+                assert False
+        self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/home").click()
+        self.remove_folder_function(test_rename_folder)

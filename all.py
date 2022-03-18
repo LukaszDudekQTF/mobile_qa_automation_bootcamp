@@ -20,6 +20,7 @@ echo_box_save_button_access_id = "messageSaveBtn"
 element_01 = "Stratus"
 element_02 = "Fog"
 test_folder = "NewTestFolder"
+count_of_theapp_tests = 8
 
 
 def custom_wait_function(start_time=1, timeout=10):
@@ -37,7 +38,7 @@ class Test01Android:
     def setup_method(self, method_name):
         log.info("setup_method")
         test_method_number = int(method_name.__name__[6])
-        the_app_test_pack = [1, 2, 3, 4, 5, 6, 7, 8]
+        the_app_test_pack = [x+1 for x in range(count_of_theapp_tests)]
         if test_method_number in the_app_test_pack:
             apk_name = "the_app"
         else:

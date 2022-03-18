@@ -199,7 +199,7 @@ class Test01Android:
             self.actions = ActionChains(self.driver).click_and_hold(self.folder_name).perform()
 
         self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/bottom_menu_rename").click()
-        self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/file_name").send_keys\
+        self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/file_name").send_keys \
             (test_rename_folder)
         self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
         log.info(f"Checking if '{test_rename_folder}' was created successfully")
@@ -221,4 +221,30 @@ class Test01Android:
         try:
             self.get_element_by_text(test_new_folder).click()
         except NoSuchElementException:
-            log.info("Exception catched")
+            log.info("Exception caught")
+
+    def another_wait_function(self):
+        start_time = time.time()
+        end_time = time.time()
+        self.timeout = 10.0
+
+        while True:
+            counter = (start_time + self.timeout) - end_time
+            if counter > 0.0:
+                log.info(counter)
+                time.sleep(1)
+                self.timeout -= 1.0
+            else:
+                break
+
+    def test_13_while(self):
+        self.create_new_folder_function(test_new_folder)
+        log.info("10 seconds timeout")
+        self.another_wait_function()
+        self.get_element_by_text("Main storage").click()
+        log.info(f"Check if new '{test_new_folder}' directory is present")
+        try:
+            assert self.get_element_by_text(test_new_folder)
+        except NoSuchElementException:
+            self.screen_scroll()
+            assert self.get_element_by_text(test_new_folder)

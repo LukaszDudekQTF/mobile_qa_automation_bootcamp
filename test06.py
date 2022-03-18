@@ -15,7 +15,7 @@ def test_06_send_keys():
     driver.find_element_by_accessibility_id(echo_box_button_accessibility_id).click()
     driver.implicitly_wait(1)
     driver.find_element_by_accessibility_id(echo_box_screen_field_accessibility_id).send_keys(message)
-    # driver.find_element_by_accessibility_id(echo_box_save_button_accessibility_id).click()
+    # driver.find_element_by_accessibility_id(echo_box_save_button_access_id).click()
     driver.implicitly_wait(1)
     TouchAction(driver).tap(x=543, y=1414).perform()
     text_sent = driver.find_element_by_xpath('//android.widget.TextView[@index="1"]').text

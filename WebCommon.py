@@ -1,24 +1,35 @@
 from appium import webdriver
 
-the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
+
+# MAC localizations
+# the_app = "/Users/lukas/Desktop/boot-camp/theapp.apk"
+# filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
+
+# Windows localizations
+the_app = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\theapp.apk"
+filemanager = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\filemanager.apk"
 
 
 class WebCommon:
     def __init__(self, apk_name):
         self.driver = None
         self.init_driver(apk_name)
-        # self.get_driver()
 
     def init_driver(self, apk_name):
         desired_caps = {
             "platformName": "Android",
-            "platformVersion": "12",
-            "deviceName": "R5CN81ML3VE",
-            "automationName": "UiAutomator2",
-            "app": apk_name,
-            # "autoGrantPermissions": True
-            "noReset": True
+            "platformVersion": "9",
+            "deviceName": "emulator-5554",
+            # "automationName": "UiAutomator2",
+            "autoGrantPermissions": True
+            # "noReset": True
         }
+
+        if apk_name == "the_app":
+            desired_caps["app"] = the_app
+        elif apk_name == "filemanager":
+            desired_caps["app"] = filemanager
+
         self.driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", desired_caps)
 
     def get_driver(self):

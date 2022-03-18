@@ -19,7 +19,7 @@ echo_box_screen_field_access_id = "messageInput"
 echo_box_save_button_access_id = "messageSaveBtn"
 element_01 = "Stratus"
 element_02 = "Fog"
-test_folder = "NewTestFolder"
+new_test_folder = "test_folder"
 count_of_theapp_tests = 8
 
 
@@ -66,22 +66,22 @@ class Test01Android:
 
     def create_new_folder_function(self):
         self.driver.implicitly_wait(5)
-        log.info(f"Creating new folder: '{test_folder}'")
+        log.info(f"Creating new folder: '{new_test_folder}'")
         self.get_element_by_text("Main storage").click()
         self.driver.find_element(AppiumBy.ACCESSIBILITY_ID, filemanager_more_options_access_id).click()
         self.get_element_by_text("New").click()
         self.get_element_by_text("Folder").click()
         self.driver.find_element_by_xpath("//android.widget.LinearLayout/"
                                           "android.widget.FrameLayout/"
-                                          "android.widget.EditText").send_keys(test_folder)
-        self.get_element_by_text(test_folder)
+                                          "android.widget.EditText").send_keys(new_test_folder)
+        self.get_element_by_text(new_test_folder)
         self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
-        log.info(f"'{test_folder}' created!")
+        log.info(f"'{new_test_folder}' created!")
 
     def remove_folder_function(self):
-        log.info(f"Deleting {test_folder}...")
+        log.info(f"Deleting {new_test_folder}...")
         self.driver.implicitly_wait(5)
-        self.folder_name = self.get_element_by_text(test_folder)
+        self.folder_name = self.get_element_by_text(new_test_folder)
         self.actions = TouchAction(self.driver).long_press(self.folder_name).perform()
         self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/bottom_menu_delete").click()
         self.driver.find_element(AppiumBy.ID, "android:id/button1").click()
@@ -140,6 +140,6 @@ class Test01Android:
 
     def test_09_create_folder(self):
         self.create_new_folder_function()
-        log.info(f"Check if newly created directory '{test_folder}' is available")
-        assert self.get_element_by_text(test_folder)
+        log.info(f"Check if newly created directory '{new_test_folder}' is available")
+        assert self.get_element_by_text(new_test_folder)
         self.remove_folder_function()

@@ -211,6 +211,14 @@ class Test01Android:
                 assert self.get_element_by_text(test_new_folder).is_enabled()
             except NoSuchElementException:
                 log.info(f"'{test_rename_folder}' is not available")
-                assert False
         self.driver.find_element(AppiumBy.ID, "com.alphainventor.filemanager:id/home").click()
         self.remove_folder_function(test_rename_folder)
+
+    def test_12_exception(self):
+        self.create_new_folder_function(test_new_folder)
+        self.remove_folder_function(test_new_folder)
+        self.get_element_by_text("Main storage").click()
+        try:
+            self.get_element_by_text(test_new_folder).click()
+        except NoSuchElementException:
+            log.info("Exception catched")

@@ -32,11 +32,28 @@ folder_created_message = "Folder created successfully"
 def custom_wait_function(start_time=1, timeout=10):
     log.info(f"Screen content loading: wait {timeout} seconds")
     while start_time <= timeout:
+        log.info(start_time)
         time.sleep(1)
         start_time += 1
 
 
+def another_wait_function():
+    start_time = time.time()
+    end_time = time.time()
+    timeout = 10.0
+
+    while True:
+        counter = (start_time + timeout) - end_time
+        if counter > 0.0:
+            log.info(counter)
+            time.sleep(1)
+            timeout -= 1.0
+        else:
+            break
+
+
 class Test01Android:
+
     @classmethod
     def setup_class(cls):
         log.info("setup_class")
@@ -44,7 +61,7 @@ class Test01Android:
     def setup_method(self, method_name):
         log.info("setup_method")
         test_method_number = method_name.__name__[5:7]
-        the_app_test_pack = str([x + 1 for x in range(count_of_theapp_tests)])
+        the_app_test_pack = str(["0" + str(x + 1) for x in range(count_of_theapp_tests)])
         if test_method_number in the_app_test_pack:
             apk_name = "the_app"
         else:
@@ -223,24 +240,10 @@ class Test01Android:
         except NoSuchElementException:
             log.info("Exception caught")
 
-    def another_wait_function(self):
-        start_time = time.time()
-        end_time = time.time()
-        self.timeout = 10.0
-
-        while True:
-            counter = (start_time + self.timeout) - end_time
-            if counter > 0.0:
-                log.info(counter)
-                time.sleep(1)
-                self.timeout -= 1.0
-            else:
-                break
-
     def test_13_while(self):
         self.create_new_folder_function(test_new_folder)
         log.info("10 seconds timeout")
-        self.another_wait_function()
+        another_wait_function()
         self.get_element_by_text("Main storage").click()
         log.info(f"Check if new '{test_new_folder}' directory is present")
         try:

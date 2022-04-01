@@ -1,4 +1,4 @@
-import logger_config
+from utils import logger_config
 from WebCommon import WebCommon, the_app
 
 driver = WebCommon(the_app).get_driver()

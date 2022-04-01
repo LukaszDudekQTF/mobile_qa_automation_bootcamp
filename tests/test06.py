@@ -1,4 +1,4 @@
-import logger_config
+from utils import logger_config
 from WebCommon import WebCommon, the_app
 from appium.webdriver.common.touch_action import TouchAction
 

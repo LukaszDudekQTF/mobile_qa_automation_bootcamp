@@ -1,5 +1,5 @@
 from WebCommon import WebCommon, the_app
-import logger_config
+from utils import logger_config
 
 list_demo_header = "Check out these clouds"
 driver = WebCommon(the_app).get_driver()

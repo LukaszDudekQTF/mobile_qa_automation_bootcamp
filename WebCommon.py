@@ -6,8 +6,16 @@ from appium import webdriver
 # filemanager = "/Users/lukas/Desktop/boot-camp/filemanager.apk"
 
 # Windows localizations
-the_app = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\theapp.apk"
-filemanager = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\filemanager.apk"
+# the_app = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\theapp.apk"
+# filemanager = "C:\\Users\\lukas\\Desktop\\mobile_qa_automation_bootcamp\\filemanager.apk"
+
+# GitHub localization
+# the_app = "//apps/theapp.apk"
+# filemanager = "//apps/filemanager.apk"
+
+# Linux localization
+the_app = "/home/lukas/PycharmProjects/mobile_qa_automation_bootcamp/apps/theapp.apk"
+filemanager = "/home/lukas/PycharmProjects/mobile_qa_automation_bootcamp/apps/filemanager.apk"
 
 
 class WebCommon:

@@ -1,3 +1,4 @@
-cd AppData\Local\Android\Sdk\emulator
-emulator -avd Pixel-2-AND-9
-emulator -avd Pixel-4-AND-12
+emulator @avd Pixel-4-AND-9
+emulator @avd Pixel-4-AND-10
+emulator @avd Pixel-4-AND-11
+emulator @avd Pixel-4-AND-12
